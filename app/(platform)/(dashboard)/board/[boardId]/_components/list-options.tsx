@@ -3,13 +3,13 @@
 import { toast } from "sonner";
 import { List } from "@prisma/client";
 import { ElementRef, useRef } from "react";
-import { MoreHorizontal, X } from "lucide-react";
+import { Copy, MoreHorizontal, Plus, Trash, X } from "lucide-react";
 
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  PopoverClose
+  PopoverClose,
 } from "@/components/ui/popover";
 import { useAction } from "@/hooks/use-action";
 import { Button } from "@/components/ui/button";
@@ -21,12 +21,9 @@ import { Separator } from "@/components/ui/separator";
 interface ListOptionsProps {
   data: List;
   onAddCard: () => void;
-};
+}
 
-export const ListOptions = ({
-  data,
-  onAddCard,
-}: ListOptionsProps) => {
+export const ListOptions = ({ data, onAddCard }: ListOptionsProps) => {
   const closeRef = useRef<ElementRef<"button">>(null);
 
   const { execute: executeDelete } = useAction(deleteList, {
@@ -36,7 +33,7 @@ export const ListOptions = ({
     },
     onError: (error) => {
       toast.error(error);
-    }
+    },
   });
 
   const { execute: executeCopy } = useAction(copyList, {
@@ -46,7 +43,7 @@ export const ListOptions = ({
     },
     onError: (error) => {
       toast.error(error);
-    }
+    },
   });
 
   const onDelete = (formData: FormData) => {
@@ -75,38 +72,42 @@ export const ListOptions = ({
           List actions
         </div>
         <PopoverClose ref={closeRef} asChild>
-          <Button className="h-auto w-auto p-2 absolute top-2 right-2 text-neutral-600" variant="ghost">
+          <Button
+            className="h-auto w-auto p-2 absolute top-2 right-2 text-neutral-600"
+            variant="ghost"
+          >
             <X className="h-4 w-4" />
           </Button>
         </PopoverClose>
         <Button
           onClick={onAddCard}
-          className="rounded-none w-full h-auto p-2 px-5 justify-start font-normal text-sm"
+          className="rounded-none w-full h-auto p-2 px-5 justify-between items-center font-normal text-sm"
           variant="ghost"
         >
-          Add card...
+          <span>Add card...</span>
+          <Plus className="w-4 h-4" />
         </Button>
         <form action={onCopy}>
           <input hidden name="id" id="id" value={data.id} />
           <input hidden name="boardId" id="boardId" value={data.boardId} />
           <FormSubmit
             variant="ghost"
-            className="rounded-none w-full h-auto p-2 px-5 justify-start font-normal text-sm"
+            className="rounded-none w-full h-auto p-2 px-5 justify-between font-normal text-sm items-center"
           >
-            Copy list...
+            <span>Copy list...</span>
+            <Copy className="w-4 h-4" />
           </FormSubmit>
         </form>
         <Separator />
-        <form
-          action={onDelete}
-        >
+        <form action={onDelete}>
           <input hidden name="id" id="id" value={data.id} />
           <input hidden name="boardId" id="boardId" value={data.boardId} />
           <FormSubmit
             variant="ghost"
-            className="rounded-none w-full h-auto p-2 px-5 justify-start font-normal text-sm"
+            className="rounded-none w-full h-auto p-2 px-5 justify-between items-center font-normal text-sm"
           >
-            Delete this list
+            <span>Delete this list</span>
+            <Trash className="w-4 h-4" />
           </FormSubmit>
         </form>
       </PopoverContent>
